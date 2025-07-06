@@ -1,0 +1,40 @@
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.ipynb_checkpoints
+*.egg-info/
+
+# Virtual envs
+venv/
+
+
+# Data
+data/metadata.csv
+*.csv
+*.xlsx
+*.h5
+*.zip
+*.tar.gz
+
+# Model weights
+*.pth
+*.pt
+
+# Logs and outputs
+logs/
+results/
+runs/
+wandb/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# VSCode
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
