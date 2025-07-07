@@ -2,22 +2,26 @@ import os
 import pandas as pd
 
 def build_metadata(root_dir="data/OCT2017"):
-    data = []
-    for split in ['train', 'val', 'test']:
-        for label in ['cnv', 'dme', 'drusen', 'normal']:
-            folder = os.path.join(root_dir, split, label)
-            for filename in os.listdir(folder):
-                if filename.lower().endswith(".jpeg"):
-                    filepath = os.path.join(folder, filename)
-                    data.append({
-                        'filepath': filepath.replace("\\", "/"),  # for Windows compatibility
-                        'class': label.lower(),
-                        'split': split
+    records = []
+    for split in ["train", "val", "test"]:
+        split_path = os.path.join(root_dir, split)
+        if not os.path.exists(split_path):
+            continue
+        for cls in os.listdir(split_path):
+            cls_path = os.path.join(split_path, cls)
+            if not os.path.isdir(cls_path):
+                continue
+            for fname in os.listdir(cls_path):
+                if fname.endswith(('.jpeg', '.jpg', '.png')):
+                    rel_path = os.path.join("data", "OCT2017", split, cls, fname).replace("\\", "/")
+                    records.append({
+                        "filename": fname,
+                        "class": cls,
+                        "split": split,
+                        "filepath": rel_path
                     })
+    return pd.DataFrame(records)
 
-    df = pd.DataFrame(data)
-    df.to_csv("data/metadata.csv", index=False)
-    print(f"[INFO] Saved metadata.csv with {len(df)} rows")
-
-if __name__ == "__main__":
-    build_metadata()
+df = build_metadata()
+df.to_csv("data/metadata.csv", index=False)
+print("metadata.csv regenerated. Total images:", len(df))
